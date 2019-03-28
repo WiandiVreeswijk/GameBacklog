@@ -18,55 +18,51 @@ import java.util.Date;
 
 public class AddGameActivity extends AppCompatActivity {
 
+    /**Declare variables**/
     private TextView gameTitle;
     private TextView platformTitle;
     private Spinner status;
     private Button addGameButton;
     public static final String GAME = "game";
-    private Boolean createMode = new Boolean(true);
+    private Boolean create = Boolean.TRUE;
     private Game editGame;
     private ArrayAdapter<CharSequence> mAdapter;
+    Game game = new Game();
+    Date date = new Date();
 
-
+    /**Instantiate different UI elements **/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_game);
-
-        gameTitle = findViewById(R.id.editTitle);
-        platformTitle = findViewById(R.id.editPlatform);
-        status = findViewById(R.id.status);
-        addGameButton = findViewById(R.id.addGameButton);
-
-        mAdapter = ArrayAdapter.createFromResource(this,R.array.statusArray,android.R.layout.simple_spinner_item);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        status.setAdapter(mAdapter);
-        if(getIntent().getParcelableExtra(MainActivity.EDIT_ITEM) != null){
-            editGame = getIntent().getParcelableExtra(MainActivity.EDIT_ITEM);
-        }
-        initComponents();
-        initActions();
+        initialize();
 
     }
-    private void initComponents(){
+    private void initialize(){
+        /**initialize UI elements**/
         gameTitle = findViewById(R.id.editTitle);
         platformTitle = findViewById(R.id.editPlatform);
         status = findViewById(R.id.status);
         addGameButton = findViewById(R.id.addGameButton);
+
+
         mAdapter = ArrayAdapter
                 .createFromResource(this,
                         R.array.statusArray, android.R.layout.simple_spinner_item);
         mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         status.setAdapter(mAdapter);
-    }
-    private void initActions() {
-        Game game = new Game();
-        Date date = new Date();
+
+        /**check if EDIT_GAME in MainActivity is not null
+         * If that is the case. editGame  will receive the data from MainActivity.EDIT_GAME **/
+        if(getIntent().getParcelableExtra(MainActivity.EDIT_GAME) != null){
+            editGame = getIntent().getParcelableExtra(MainActivity.EDIT_GAME);
+        }
+        /**format and pare date in a local manner
+         * set date of game to this format : "dd/MM/yyyy"**/
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         game.setDate(dateFormat.format(date));
-
-        if (!createMode) {
-            //If activity is in edit mode set id of object for update
+        /**set id,title,platform and status text from the data in editGame**/
+        if (!create) {
             game.setId(editGame.getId());
             gameTitle.setText(editGame.getTitle());
             platformTitle.setText(editGame.getPlatform());
@@ -74,29 +70,20 @@ public class AddGameActivity extends AppCompatActivity {
         }
 
         addGameButton.setOnClickListener(c -> {
-            if(checkAllFields()){
+            /**if title and platform TextEdits are filled**/
+            if(!gameTitle.getText().toString().isEmpty() && !platformTitle.getText().toString().isEmpty()){
+                /**fill in entity with string values**/
                 game.setTitle(gameTitle.getText().toString());
                 game.setPlatform(platformTitle.getText().toString());
                 game.setStatus(status.getSelectedItem().toString());
+                /**Send an object from this activity to the mainActivity**/
                 Intent intent = new Intent();
                 intent.putExtra(GAME, game);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
+            }else{
+                Toast.makeText(this, "Fill in a title and a description", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-    private boolean checkAllFields(){
-        if (!gameTitle.getText().toString().isEmpty() && !platformTitle.getText().toString().isEmpty()) {
-            return true;
-        } else {
-            Toast.makeText(this, "Fill in all fields please", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
     }
 }

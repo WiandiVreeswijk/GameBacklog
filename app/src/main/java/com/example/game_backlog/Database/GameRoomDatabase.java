@@ -7,6 +7,10 @@ import android.content.Context;
 
 import com.example.game_backlog.Model.Game;
 
+/**Define a list of entities. Create a static method which will return instance of appDatabase
+ * Be an abstract class that extends RoomDatabase
+ * Contain abstract method that has 0 arguments and returns the class that is annotated with @Dao
+ * **/
 @Database(entities = {Game.class}, version = 1, exportSchema = false)
 public abstract class GameRoomDatabase extends RoomDatabase {
 
