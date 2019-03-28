@@ -1,4 +1,4 @@
-package com.example.gamebacklog;
+package com.example.game_backlog;
 
 import org.junit.Test;
 
