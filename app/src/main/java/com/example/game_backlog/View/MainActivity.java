@@ -82,11 +82,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerView.OnIt
         /**Swipe left or right to delete a game from the recycleview**/
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    /**called when ItemTouchHelper wants to move the dragged item
+                     * from its old position to the new position**/
                     @Override
                     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder1) {
                         return false;
                     }
-
+                    /**called when ViewHolder is swiped by user**/
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                         int position = (viewHolder.getAdapterPosition());
